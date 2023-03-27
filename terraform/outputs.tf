@@ -1,9 +1,11 @@
 output "lb_address_consul_nomad" {
-  value = "http://${aws_instance.server[0].public_ip}"
+  value     = "http://${aws_instance.server[0].public_ip}"
+  sensitive = true
 }
 
 output "consul_bootstrap_token_secret" {
-  value = var.nomad_consul_token_secret
+  value     = var.nomad_consul_token_secret
+  sensitive = true
 }
 
 output "IP_Addresses" {
