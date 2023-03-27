@@ -6,13 +6,13 @@ server {
   bootstrap_expect = SERVER_COUNT
 }
 
+acl {
+  enabled = true
+}
+
 consul {
   address = "127.0.0.1:8500"
   token = "CONSUL_TOKEN"
-}
-
-acl {
-  enabled = true
 }
 
 vault {
