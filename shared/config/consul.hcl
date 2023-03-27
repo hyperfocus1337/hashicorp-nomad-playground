@@ -14,7 +14,11 @@ acl {
 log_level = "INFO"
 
 server = true
-ui = true
+
+ui_config {
+    enabled = true
+}
+
 retry_join = ["RETRY_JOIN"]
 
 service {
