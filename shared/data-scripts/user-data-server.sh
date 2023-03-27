@@ -2,8 +2,9 @@
 
 set -e
 
-exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-sudo bash /ops/shared/scripts/server.sh "${cloud_env}" "${server_count}" '${retry_join}' "${nomad_binary}"
+exec > >(sudo tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
+
+sudo bash /ops/shared/scripts/server.sh "${cloud_env}" "${server_count}" "${retry_join}" "${nomad_binary}"
 
 ACL_DIRECTORY="/ops/shared/config"
 CONSUL_BOOTSTRAP_TOKEN="/tmp/consul_bootstrap"
@@ -37,13 +38,12 @@ for i in {1..9}; do
     fi
     set -e
 
-    echo "$OUTPUT" | grep -i secretid | awk '{print $2}' > $CONSUL_BOOTSTRAP_TOKEN
+    echo "$OUTPUT" | grep -i secretid | awk '{print $2}' >$CONSUL_BOOTSTRAP_TOKEN
     if [ -s $CONSUL_BOOTSTRAP_TOKEN ]; then
         echo "consul bootstrapped"
         break
     fi
 done
-
 
 consul acl policy create -name 'nomad-auto-join' -rules="@$ACL_DIRECTORY/consul-acl-nomad-auto-join.hcl" -token-file=$CONSUL_BOOTSTRAP_TOKEN
 
@@ -69,7 +69,7 @@ for i in {1..12}; do
     fi
     set -e
 
-    echo "$OUTPUT" | grep -i secret | awk -F '=' '{print $2}' | xargs | awk 'NF' > $NOMAD_BOOTSTRAP_TOKEN
+    echo "$OUTPUT" | grep -i secret | awk -F '=' '{print $2}' | xargs | awk 'NF' >$NOMAD_BOOTSTRAP_TOKEN
     if [ -s $NOMAD_BOOTSTRAP_TOKEN ]; then
         echo "nomad bootstrapped"
         break
@@ -78,10 +78,9 @@ done
 
 nomad acl policy apply -token "$(cat $NOMAD_BOOTSTRAP_TOKEN)" -description "Policy to allow reading of agents and nodes and listing and submitting jobs in all namespaces." node-read-job-submit $ACL_DIRECTORY/nomad-acl-user.hcl
 
-nomad acl token create -token "$(cat $NOMAD_BOOTSTRAP_TOKEN)" -name "read-token" -policy node-read-job-submit | grep -i secret | awk -F "=" '{print $2}' | xargs > $NOMAD_USER_TOKEN
+nomad acl token create -token "$(cat $NOMAD_BOOTSTRAP_TOKEN)" -name "read-token" -policy node-read-job-submit | grep -i secret | awk -F "=" '{print $2}' | xargs >$NOMAD_USER_TOKEN
 
 # Write user token to kv
 consul kv put -token-file=$CONSUL_BOOTSTRAP_TOKEN nomad_user_token "$(cat $NOMAD_USER_TOKEN)"
 
 echo "ACL bootstrap end"
-
