@@ -1,6 +1,8 @@
+server = true
+log_level = "INFO"
 data_dir = "/opt/consul/data"
 advertise_addr = "IP_ADDRESS"
-
+retry_join = ["RETRY_JOIN"]
 bootstrap_expect = SERVER_COUNT
 
 addresses = {
@@ -14,15 +16,9 @@ acl {
     down_policy = "extend-cache"
 }
 
-log_level = "INFO"
-
-server = true
-
 ui_config {
     enabled = true
 }
-
-retry_join = ["RETRY_JOIN"]
 
 service {
     name = "consul"
