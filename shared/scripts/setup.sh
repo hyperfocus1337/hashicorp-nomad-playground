@@ -123,9 +123,3 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/${distro} $(lsb_release -cs) stable"
 sudo apt-get update
 sudo apt-get install -y docker-ce
-
-# Java
-sudo add-apt-repository -y ppa:openjdk-r/ppa
-sudo apt-get update
-sudo apt-get install -y openjdk-8-jdk
-JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
