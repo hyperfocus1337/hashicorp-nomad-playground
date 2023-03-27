@@ -37,10 +37,10 @@ case $CLOUD in
 esac
 
 # Consul
-sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul_client.hcl
-sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/consul_client.hcl
-sudo cp $CONFIGDIR/consul_client.hcl $CONSULCONFIGDIR/consul.hcl
-sudo cp $CONFIGDIR/consul_$CLOUD.service /etc/systemd/system/consul.service
+sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul/consul-client.hcl
+sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/consul/consul-client.hcl
+sudo cp $CONFIGDIR/consul/consul-client.hcl $CONSULCONFIGDIR/consul.hcl
+sudo cp $CONFIGDIR/consul/consul-$CLOUD.service /etc/systemd/system/consul.service
 
 sudo systemctl enable consul.service
 sudo systemctl start consul.service
@@ -56,8 +56,8 @@ if [[ $(wget -S --spider $NOMAD_BINARY 2>&1 | grep 'HTTP/1.1 200 OK') ]]; then
   sudo chown root:root /usr/local/bin/nomad
 fi
 
-sudo cp $CONFIGDIR/nomad_client.hcl $NOMADCONFIGDIR/nomad.hcl
-sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
+sudo cp $CONFIGDIR/nomad/nomad-client.hcl $NOMADCONFIGDIR/nomad.hcl
+sudo cp $CONFIGDIR/nomad/nomad.service /etc/systemd/system/nomad.service
 
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
@@ -65,8 +65,8 @@ sleep 10
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
 
 # Consul Template
-sudo cp $CONFIGDIR/consul-template.hcl $CONSULTEMPLATECONFIGDIR/consul-template.hcl
-sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
+sudo cp $CONFIGDIR/consul/consul-template.hcl $CONSULTEMPLATECONFIGDIR/consul-template.hcl
+sudo cp $CONFIGDIR/consul/consul-template.service /etc/systemd/system/consul-template.service
 
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts

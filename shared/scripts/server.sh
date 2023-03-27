@@ -39,11 +39,11 @@ case $CLOUD in
 esac
 
 # Consul
-sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul.hcl
-sed -i "s/SERVER_COUNT/$SERVER_COUNT/g" $CONFIGDIR/consul.hcl
-sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/consul.hcl
-sudo cp $CONFIGDIR/consul.hcl $CONSULCONFIGDIR
-sudo cp $CONFIGDIR/consul_$CLOUD.service /etc/systemd/system/consul.service
+sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul/consul-server.hcl
+sed -i "s/SERVER_COUNT/$SERVER_COUNT/g" $CONFIGDIR/consul/consul-server.hcl
+sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/consul/consul-server.hcl
+sudo cp $CONFIGDIR/consul/consul-server.hcl $CONSULCONFIGDIR/consul.hcl
+sudo cp $CONFIGDIR/consul/consul-$CLOUD.service /etc/systemd/system/consul.service
 
 sudo systemctl enable consul.service
 sudo systemctl start consul.service
@@ -52,9 +52,9 @@ export CONSUL_HTTP_ADDR=$IP_ADDRESS:8500
 export CONSUL_RPC_ADDR=$IP_ADDRESS:8400
 
 # Vault
-sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/vault.hcl
-sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR
-sudo cp $CONFIGDIR/vault.service /etc/systemd/system/vault.service
+sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/vault/vault.hcl
+sudo cp $CONFIGDIR/vault/vault.hcl $VAULTCONFIGDIR/vault.hcl
+sudo cp $CONFIGDIR/vault/vault.service /etc/systemd/system/vault.service
 
 sudo systemctl enable vault.service
 sudo systemctl start vault.service
@@ -69,9 +69,9 @@ if [[ $(wget -S --spider $NOMAD_BINARY 2>&1 | grep 'HTTP/1.1 200 OK') ]]; then
   sudo chown root:root /usr/local/bin/nomad
 fi
 
-sed -i "s/SERVER_COUNT/$SERVER_COUNT/g" $CONFIGDIR/nomad.hcl
-sudo cp $CONFIGDIR/nomad.hcl $NOMADCONFIGDIR
-sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
+sed -i "s/SERVER_COUNT/$SERVER_COUNT/g" $CONFIGDIR/nomad/nomad-server.hcl
+sudo cp $CONFIGDIR/nomad/nomad-server.hcl $NOMADCONFIGDIR/nomad.hcl
+sudo cp $CONFIGDIR/nomad/nomad.service /etc/systemd/system/nomad.service
 
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
@@ -79,8 +79,8 @@ sleep 10
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
 
 # Consul Template
-sudo cp $CONFIGDIR/consul-template.hcl $CONSULTEMPLATECONFIGDIR/consul-template.hcl
-sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
+sudo cp $CONFIGDIR/consul/consul-template.hcl $CONSULTEMPLATECONFIGDIR/consul-template.hcl
+sudo cp $CONFIGDIR/consul/consul-template.service /etc/systemd/system/consul-template.service
 
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
