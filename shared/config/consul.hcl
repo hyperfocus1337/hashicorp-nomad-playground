@@ -3,6 +3,11 @@ advertise_addr = "IP_ADDRESS"
 
 bootstrap_expect = SERVER_COUNT
 
+addresses = {
+  http = "0.0.0.0"
+  https = "0.0.0.0"
+}
+
 acl {
     enabled = true
     default_policy = "deny"
