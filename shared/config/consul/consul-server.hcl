@@ -10,14 +10,14 @@ addresses = {
   https = "0.0.0.0"
 }
 
+ui_config {
+    enabled = true
+}
+
 acl {
     enabled = true
     default_policy = "deny"
     down_policy = "extend-cache"
-}
-
-ui_config {
-    enabled = true
 }
 
 service {
