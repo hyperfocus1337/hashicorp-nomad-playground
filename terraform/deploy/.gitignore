@@ -7,5 +7,5 @@ keys/
 tfstate/
 .terraform
 .terraform.lock.hcl
-variables.hcl
+variables.tfvars
 nomad.token
